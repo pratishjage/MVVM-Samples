@@ -9,7 +9,7 @@ interface UserDao {
     @Query("select * from user")
     suspend fun getAllUsers(): List<User>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(users: User)
 
     @Update

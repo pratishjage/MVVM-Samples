@@ -21,7 +21,8 @@ data class User(
     var address: UserAddress?,
     @field:SerializedName("company")
     @field:Embedded(prefix = "company")
-    var company: UserCompany?
+    var company: UserCompany?,
+    var isFavourite: Boolean = false
 
 
 )

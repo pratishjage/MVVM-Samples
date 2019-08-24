@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.mvvmsample.Utils.SingletonHolder
 
-@Database(entities = arrayOf(User::class), version = 1)
+@Database(entities = arrayOf(User::class), version = 1, exportSchema = false)
 abstract class UsersDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
