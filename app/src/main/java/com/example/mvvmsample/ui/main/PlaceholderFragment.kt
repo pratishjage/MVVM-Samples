@@ -57,7 +57,10 @@ class PlaceholderFragment : Fragment() {
                     stopLoading(it.status)
                     setUpViews(it.data)
                     recyclerView.visibility = View.VISIBLE
-                    it.data?.let { adapter.setUsers(it) }
+                    it.data?.let {
+                        val filter = it.filter { it.isFavourite == arguments?.getBoolean(IS_FAV) }
+                        adapter.setUsers(filter)
+                    }
                 }
                 Status.LOADING -> {
                     startLoading()
@@ -87,17 +90,17 @@ class PlaceholderFragment : Fragment() {
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private const val ARG_SECTION_NUMBER = "section_number"
+        private const val IS_FAV = "is_fav"
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
         @JvmStatic
-        fun newInstance(sectionNumber: Int): PlaceholderFragment {
+        fun newInstance(isFav: Boolean): PlaceholderFragment {
             return PlaceholderFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_SECTION_NUMBER, sectionNumber)
+                    putBoolean(IS_FAV, isFav)
                 }
             }
         }
