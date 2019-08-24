@@ -5,13 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmsample.R
 import com.example.mvvmsample.Utils.Status
 import com.example.mvvmsample.db.User
+import com.example.mvvmsample.ui.Adapters.UsersAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
@@ -40,16 +42,22 @@ class PlaceholderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_main, container, false)
-       /* val textView: TextView = root.findViewById(R.id.section_label)
-        pageViewModel.text.observe(this, Observer<String> {
-            textView.text = it
-        })*/
+        /* val textView: TextView = root.findViewById(R.id.section_label)
+         pageViewModel.text.observe(this, Observer<String> {
+             textView.text = it
+         })*/
+        val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerview)
+        val adapter = UsersAdapter(this.requireContext())
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this.requireContext())
         pageViewModel.getUsers(false)?.observe(this, Observer {
-            Log.d("Placeholder",it.status.toString())
+            Log.d("Placeholder", it.status.toString())
             when (it?.status) {
                 Status.SUCCESS -> {
                     stopLoading(it.status)
                     setUpViews(it.data)
+                    recyclerView.visibility = View.VISIBLE
+                    it.data?.let { adapter.setUsers(it) }
                 }
                 Status.LOADING -> {
                     startLoading()
