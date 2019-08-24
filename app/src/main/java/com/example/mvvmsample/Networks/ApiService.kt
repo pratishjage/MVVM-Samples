@@ -1,16 +1,18 @@
 package com.example.mvvmsample.Networks
 
 import com.example.mvvmsample.Utils.AppConstants.BASE_URL
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 
-class ApiService {
+object ApiService {
     fun getOkHttpCleint(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addNetworkInterceptor(StethoInterceptor())
             .build()
     }
 
