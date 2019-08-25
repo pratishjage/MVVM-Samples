@@ -1,6 +1,7 @@
 package com.example.mvvmsample.ui.main
 
 import android.content.Intent
+import android.location.Address
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,10 +13,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmsample.R
+import com.example.mvvmsample.Utils.AppConstants.ADDRESS
+import com.example.mvvmsample.Utils.AppConstants.LAT
+import com.example.mvvmsample.Utils.AppConstants.LNG
+import com.example.mvvmsample.Utils.AppConstants.NAME
 import com.example.mvvmsample.Utils.Status
 import com.example.mvvmsample.db.User
 import com.example.mvvmsample.ui.Adapters.UsersAdapter
 import com.example.mvvmsample.ui.MapsActivity
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
@@ -50,7 +56,14 @@ class PlaceholderFragment : Fragment() {
          })*/
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = UsersAdapter(this.requireContext(), {
-            startActivity(Intent(activity, MapsActivity::class.java))
+            val userBundle = Bundle()
+            userBundle.putString(NAME, it.name)
+            userBundle.putString(LAT, it.address?.geo?.lat)
+            userBundle.putString(LNG, it.address?.geo?.lng)
+            userBundle.putString(ADDRESS, Gson().toJson(it.address))
+            val intent = Intent(activity, MapsActivity::class.java)
+            intent.putExtras(userBundle)
+            startActivity(intent)
         }, {
             pageViewModel.updateUser(it)
         })

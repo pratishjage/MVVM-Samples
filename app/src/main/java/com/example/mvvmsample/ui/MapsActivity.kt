@@ -3,6 +3,11 @@ package com.example.mvvmsample.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.mvvmsample.R
+import com.example.mvvmsample.Utils.AppConstants.ADDRESS
+import com.example.mvvmsample.Utils.AppConstants.LAT
+import com.example.mvvmsample.Utils.AppConstants.LNG
+import com.example.mvvmsample.Utils.AppConstants.NAME
+import com.example.mvvmsample.db.UserAddress
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -10,6 +15,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_maps.*
+import java.lang.StringBuilder
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -36,9 +44,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+
+        val extras = intent.extras
+
+        val name = extras.getString(NAME)
+        val lat = extras.getString(LAT)
+        val lng = extras.getString(LNG)
+        val address = Gson().fromJson(extras.getString(ADDRESS), UserAddress::class.java)
+
+        val addressString = StringBuilder()
+        addressString.append("Address :").append(address.street).append(",").append(address.suite)
+            .append(",").append(address.city).append("-").append(address.zipcode)
+        address_txt.text = addressString.toString()
+
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val userLocation = LatLng(lat.toDouble(), lng.toDouble())
+        mMap.addMarker(MarkerOptions().position(userLocation).title(name))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14.0f))
     }
 }
