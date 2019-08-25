@@ -13,7 +13,7 @@ import com.example.mvvmsample.R
 import com.example.mvvmsample.db.User
 
 class UsersAdapter internal constructor(
-    context: Context, val listener: (User) -> Unit
+    context: Context, val listener: (User) -> Unit, val favlistener: (User) -> Unit
 ) : RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -38,11 +38,13 @@ class UsersAdapter internal constructor(
         holder.viewonMapBtn.setOnClickListener {
             listener(current)
         }
-        if (current.isFavourite) {
-            holder.likeBtn.setBackgroundResource(R.drawable.ic_favorite_red_24dp)
-        } else {
-            holder.likeBtn.setBackgroundResource(R.drawable.ic_favorite_border_grey_24dp)
-
+        holder.likeBtn.setOnClickListener {
+            current.isFavourite = !current.isFavourite
+            favlistener(current)
+        }
+        when {
+            current.isFavourite -> holder.likeBtn.setBackgroundResource(R.drawable.ic_favorite_red_24dp)
+            else -> holder.likeBtn.setBackgroundResource(R.drawable.ic_favorite_border_grey_24dp)
         }
 
         holder.phoneText.text = current.phone
@@ -52,6 +54,7 @@ class UsersAdapter internal constructor(
         this.users = users
         notifyDataSetChanged()
     }
+
 
     override fun getItemCount() = users.size
 }

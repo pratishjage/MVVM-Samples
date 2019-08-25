@@ -51,6 +51,8 @@ class PlaceholderFragment : Fragment() {
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = UsersAdapter(this.requireContext(), {
             startActivity(Intent(activity, MapsActivity::class.java))
+        }, {
+            pageViewModel.updateUser(it)
         })
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this.requireContext())

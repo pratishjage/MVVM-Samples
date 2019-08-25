@@ -13,6 +13,7 @@ class PageViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         mainRepo = MainRepo(application)
+
         getUsers()
     }
 
@@ -32,6 +33,13 @@ class PageViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             users.value = Resource.loading(null)
             users.value = mainRepo.getUsers().value
+        }
+    }
+
+
+    fun updateUser(user: User) {
+        viewModelScope.launch {
+            users.value = mainRepo.updateUser(user).value
         }
     }
 

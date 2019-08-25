@@ -12,24 +12,67 @@ import com.example.mvvmsample.db.UsersDatabase
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.withContext
+import kotlin.math.log
 
 class MainRepo constructor(val application: Application) {
     private var apiCalls: ApiCalls
     private var userDao: UserDao
+    private var mainList: MutableLiveData<Resource<List<User>>>
 
     init {
         apiCalls = ApiService.createService(ApiCalls::class.java)
         val db = UsersDatabase.getInstance(application.applicationContext)
         userDao = db.userDao()
+        mainList = MutableLiveData()
+        mainList.value = Resource.loading(null)
     }
+
+
+    /* suspend fun getUsers(): MutableLiveData<Resource<List<User>>> {
+
+         val result: MutableLiveData<Resource<List<User>>> = MutableLiveData()
+         val allUsers = userDao.getAllUsers()
+         if ((allUsers.size > 0)) {
+             result.value = Resource.success(allUsers)
+             Log.d("getUsers", "local")
+         } else {
+             try {
+                 val response = withContext(Dispatchers.IO) {
+                     apiCalls.getUsers()
+                 }
+                 try {
+                     if (response.isSuccessful) {
+                         var resp = response.body()
+                         Log.d("getUsers", resp?.get(0)?.name)
+                         withContext(Dispatchers.IO) {
+                             resp?.forEach {
+                                 userDao.insertUser(it)
+                             }
+                         }
+                         result.value = Resource.success(resp?.let { it })
+                         Log.d("getUsers", "server")
+                     } else {
+                         result.postValue(Resource.error(java.lang.Exception()))
+                     }
+                 } catch (e: Exception) {
+                     e.printStackTrace()
+                     result.value = Resource.error(e)
+                 }
+             } catch (e: Exception) {
+                 e.printStackTrace()
+                 result.value = Resource.error(e)
+             }
+         }
+         return result
+     }*/
 
 
     suspend fun getUsers(): MutableLiveData<Resource<List<User>>> {
 
-        val result: MutableLiveData<Resource<List<User>>> = MutableLiveData()
+
         val allUsers = userDao.getAllUsers()
         if ((allUsers.size > 0)) {
-            result.value = Resource.success(allUsers)
+            mainList.value = Resource.success(allUsers)
             Log.d("getUsers", "local")
         } else {
             try {
@@ -45,29 +88,28 @@ class MainRepo constructor(val application: Application) {
                                 userDao.insertUser(it)
                             }
                         }
-                        result.value = Resource.success(resp?.let { it })
+                        mainList.value = Resource.success(resp?.let { it })
                         Log.d("getUsers", "server")
                     } else {
-                        result.postValue(Resource.error(java.lang.Exception()))
+                        mainList.postValue(Resource.error(java.lang.Exception()))
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    result.value = Resource.error(e)
+                    mainList.value = Resource.error(e)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                result.value = Resource.error(e)
+                mainList.value = Resource.error(e)
             }
-            }
-            return result
         }
-
-
-        suspend fun updateUser(user: User) {
-            withContext(Dispatchers.IO) {
-                userDao.updateUser(user)
-            }
-
-        }
-
+        return mainList
     }
+
+    suspend fun updateUser(user: User): MutableLiveData<Resource<List<User>>> {
+        withContext(Dispatchers.IO) {
+            userDao.updateUser(user)
+        }
+        mainList.value = Resource.success(userDao.getAllUsers())
+        return mainList
+    }
+}
