@@ -28,45 +28,6 @@ class MainRepo constructor(val application: Application) {
     }
 
 
-    /* suspend fun getUsers(): MutableLiveData<Resource<List<User>>> {
-
-         val result: MutableLiveData<Resource<List<User>>> = MutableLiveData()
-         val allUsers = userDao.getAllUsers()
-         if ((allUsers.size > 0)) {
-             result.value = Resource.success(allUsers)
-             Log.d("getUsers", "local")
-         } else {
-             try {
-                 val response = withContext(Dispatchers.IO) {
-                     apiCalls.getUsers()
-                 }
-                 try {
-                     if (response.isSuccessful) {
-                         var resp = response.body()
-                         Log.d("getUsers", resp?.get(0)?.name)
-                         withContext(Dispatchers.IO) {
-                             resp?.forEach {
-                                 userDao.insertUser(it)
-                             }
-                         }
-                         result.value = Resource.success(resp?.let { it })
-                         Log.d("getUsers", "server")
-                     } else {
-                         result.postValue(Resource.error(java.lang.Exception()))
-                     }
-                 } catch (e: Exception) {
-                     e.printStackTrace()
-                     result.value = Resource.error(e)
-                 }
-             } catch (e: Exception) {
-                 e.printStackTrace()
-                 result.value = Resource.error(e)
-             }
-         }
-         return result
-     }*/
-
-
     suspend fun getUsers(): MutableLiveData<Resource<List<User>>> {
 
 

@@ -22,6 +22,7 @@ import com.example.mvvmsample.db.User
 import com.example.mvvmsample.ui.Adapters.UsersAdapter
 import com.example.mvvmsample.ui.MapsActivity
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.failure_layout.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
@@ -74,8 +75,6 @@ class PlaceholderFragment : Fragment() {
             when (it?.status) {
                 Status.SUCCESS -> {
                     stopLoading(it.status)
-                    setUpViews(it.data)
-                    recyclerView.visibility = View.VISIBLE
                     it.data?.let {
                         val filter = it.filter { it.isFavourite == arguments?.getBoolean(IS_FAV) }
                         adapter.setUsers(filter)
@@ -86,22 +85,37 @@ class PlaceholderFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     stopLoading(it.status)
+
                 }
             }
         })
         return root
     }
 
-    private fun setUpViews(data: List<User>?) {
-
-    }
 
     private fun startLoading() {
+        recyclerview.visibility = View.GONE
+        failure_layout.visibility = View.GONE
         progressbar.visibility = View.VISIBLE
+
     }
 
     private fun stopLoading(status: Status) {
         progressbar.visibility = View.GONE
+
+        when (status) {
+            Status.SUCCESS -> {
+                failure_layout.visibility = View.GONE
+                recyclerview.visibility = View.VISIBLE
+            }
+            Status.ERROR -> {
+                failure_layout.visibility = View.VISIBLE
+                recyclerview.visibility = View.GONE
+                retry_btn.setOnClickListener {
+                    pageViewModel.getUsers()
+                }
+            }
+        }
     }
 
     companion object {

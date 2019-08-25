@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#A8B3B2</color>
     <color name="colorAccent">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="failure_bg">#e53935</color>
 </resources>

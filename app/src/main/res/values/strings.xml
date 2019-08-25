@@ -6,5 +6,7 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="all_users">All</string>
     <string name="fev_users">Favourites</string>
-    <string name="title_activity_maps">Location</string>
+    <string name="title_activity_maps">Address Location</string>
+    <string name="something_went_wrong">Something went wrong at our end</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -33,8 +33,7 @@
         <activity
                 android:name=".ui.MapsActivity"
                 android:label="@string/title_activity_maps"
-                android:theme="@style/AppTheme"
-                >
+                android:theme="@style/AppTheme">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.example.mvvmsample.ui.TabsActivity" />
@@ -53,9 +52,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-                android:name=".MainActivity"
-                android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
