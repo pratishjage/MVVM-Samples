@@ -1,5 +1,6 @@
 package com.example.mvvmsample.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.example.mvvmsample.R
 import com.example.mvvmsample.Utils.Status
 import com.example.mvvmsample.db.User
 import com.example.mvvmsample.ui.Adapters.UsersAdapter
+import com.example.mvvmsample.ui.MapsActivity
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
@@ -47,7 +49,9 @@ class PlaceholderFragment : Fragment() {
              textView.text = it
          })*/
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = UsersAdapter(this.requireContext())
+        val adapter = UsersAdapter(this.requireContext(), {
+            startActivity(Intent(activity, MapsActivity::class.java))
+        })
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this.requireContext())
         pageViewModel.getUsers(false)?.observe(this, Observer {

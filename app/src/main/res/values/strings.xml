@@ -6,4 +6,5 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="all_users">All</string>
     <string name="fev_users">Favourites</string>
+    <string name="title_activity_maps">Location</string>
 </resources>
